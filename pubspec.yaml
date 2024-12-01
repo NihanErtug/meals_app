@@ -1,0 +1,56 @@
+name: meals_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  riverpod: ^2.5.1
+  transparent_image: ^2.0.1
+
+
+  firebase_core: ^3.3.0
+  cloud_firestore: ^5.2.1
+  animated_notch_bottom_bar: ^1.0.3
+  icons_launcher: ^3.0.0
+  google_fonts: ^6.2.1
+  flutter_native_splash: ^2.4.3
+  
+
+
+
+icons_launcher:
+  image_path: "assets/icon/launcher_icon.png"
+  platforms:
+    android:
+      enable: true
+       
+flutter_native_splash:
+   
+  background_image: assets/splash_screen.png
+  android: true
+  fullscreen: true
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+
+
+flutter:
+  uses-material-design: true
+  
+  assets:     
+    - assets/default_image.jpg
+    - assets/splash_screen.png
+    - assets/animation/splash_screen.gif
+   
+
+
