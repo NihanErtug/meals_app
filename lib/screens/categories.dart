@@ -35,21 +35,23 @@ class _CategoriesState extends State<Categories> {
           "Kategoriler",
         ),
       ),
-      body: GridView(
-        padding: const EdgeInsets.all(10),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 25,
-            childAspectRatio: 2 / 1.5),
-        children: categoryList
-            .map((e) => CategoryCard(
-                  category: e,
-                  onCategoryClick: () {
-                    _changeScreen(e, context);
-                  },
-                ))
-            .toList(),
+      body: SafeArea(
+        child: GridView(
+          padding: const EdgeInsets.all(10),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 25,
+              childAspectRatio: 2 / 1.5),
+          children: categoryList
+              .map((e) => CategoryCard(
+                    category: e,
+                    onCategoryClick: () {
+                      _changeScreen(e, context);
+                    },
+                  ))
+              .toList(),
+        ),
       ),
     );
   }

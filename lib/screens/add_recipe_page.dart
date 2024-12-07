@@ -62,107 +62,113 @@ class _AddRecipePageState extends State<AddRecipePage> {
       appBar: AppBar(
         title: const Text("Tarif Ekle"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DropdownButtonFormField<Category>(
-                    value: _selectedCategory,
-                    hint: const Text("Kategori Seçin"),
-                    items: categories.map((Category category) {
-                      return DropdownMenuItem<Category>(
-                          value: category, child: Text(category.name));
-                    }).toList(),
-                    onChanged: (Category? newValue) {
-                      setState(() {
-                        _selectedCategory = newValue;
-                      });
-                    },
-                    validator: (value) =>
-                        value == null ? 'Kategori seçmelisiniz' : null,
-                  ),
-                  TextFormField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(labelText: "Tarif Adı"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Tarif adı boş olamaz.";
-                        }
-                        return null;
-                      }),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                      decoration: const InputDecoration(labelText: 'Resim URL'),
-                      onSaved: (value) => _imageUrl = value!),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: TextFormField(
-                        controller: _ingredientController,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownButtonFormField<Category>(
+                      value: _selectedCategory,
+                      hint: const Text("Kategori Seçin"),
+                      items: categories.map((Category category) {
+                        return DropdownMenuItem<Category>(
+                            value: category, child: Text(category.name));
+                      }).toList(),
+                      onChanged: (Category? newValue) {
+                        setState(() {
+                          _selectedCategory = newValue;
+                        });
+                      },
+                      validator: (value) =>
+                          value == null ? 'Kategori seçmelisiniz' : null,
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                        controller: _nameController,
                         decoration:
-                            const InputDecoration(labelText: "Malzeme Ekle"),
-                      )),
-                      IconButton(
-                          onPressed: _addIngredient,
-                          icon: const Icon(Icons.add)),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 6.0,
-                    runSpacing: 6.0,
-                    children: _ingredients.map((ingredient) {
-                      return Chip(
-                        label: Text(ingredient),
-                        onDeleted: () {
-                          setState(() {
-                            _ingredients.remove(ingredient);
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                      controller: _recipeController,
-                      decoration: const InputDecoration(labelText: 'Tarif'),
-                      maxLines: 5,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Tarif boş olamaz.";
-                        }
-                        return null;
-                      }),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Puan",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Slider(
-                    value: _rating,
-                    onChanged: (newRating) {
-                      setState(() {
-                        _rating = newRating;
-                      });
-                    },
-                    min: 0,
-                    max: 5,
-                    divisions: 5,
-                    label: _rating.toString(),
-                  ),
-                  const SizedBox(height: 20),
-                  Center(
-                    child: ElevatedButton(
-                        onPressed: _saveRecepie,
-                        child: const Text("Tarifi Kaydet")),
-                  ),
-                ],
-              ),
-            )),
+                            const InputDecoration(labelText: "Tarif Adı"),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Tarif adı boş olamaz.";
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                        decoration:
+                            const InputDecoration(labelText: 'Resim URL'),
+                        onSaved: (value) => _imageUrl = value!),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: TextFormField(
+                          controller: _ingredientController,
+                          decoration:
+                              const InputDecoration(labelText: "Malzeme Ekle"),
+                        )),
+                        IconButton(
+                            onPressed: _addIngredient,
+                            icon: const Icon(Icons.add)),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 6.0,
+                      runSpacing: 6.0,
+                      children: _ingredients.map((ingredient) {
+                        return Chip(
+                          label: Text(ingredient),
+                          onDeleted: () {
+                            setState(() {
+                              _ingredients.remove(ingredient);
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                        controller: _recipeController,
+                        decoration: const InputDecoration(labelText: 'Tarif'),
+                        maxLines: 5,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Tarif boş olamaz.";
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Puan",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Slider(
+                      value: _rating,
+                      onChanged: (newRating) {
+                        setState(() {
+                          _rating = newRating;
+                        });
+                      },
+                      min: 0,
+                      max: 5,
+                      divisions: 5,
+                      label: _rating.toString(),
+                    ),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: _saveRecepie,
+                          child: const Text("Tarifi Kaydet")),
+                    ),
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }

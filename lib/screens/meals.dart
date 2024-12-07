@@ -78,7 +78,7 @@ class _MealsState extends State<Meals> {
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(left: 60, bottom: 16),
               title: Text(
-                "${widget.category.name} Listesi",
+                "${widget.category.name} ",
                 style: GoogleFonts.protestRevolution(
                     textStyle: TextStyle(color: widget.category.color)),
               ),

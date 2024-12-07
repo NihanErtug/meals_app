@@ -72,13 +72,14 @@ class Favorites extends ConsumerWidget {
                           meal.name,
                           style: const TextStyle(
                               fontSize: 18,
-                              color: Colors.black87,
+                              //color: Colors.black87,
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w300),
                         ),
                       ),
                     );
                   }).toList(),
+                  SizedBox(height: 10),
                 ]),
               );
             }).toList(),

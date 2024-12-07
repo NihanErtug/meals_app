@@ -11,10 +11,8 @@ import 'package:meals_app/screens/splash_screen.dart';
 final theme = ThemeData(
     appBarTheme: AppBarTheme(
         titleTextStyle: GoogleFonts.dancingScript(
-            textStyle: ThemeData.light()
-                .textTheme
-                .headlineLarge
-                ?.copyWith(fontSize: 33))),
+            textStyle:
+                ThemeData().textTheme.headlineLarge?.copyWith(fontSize: 33))),
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
       //brightness: Brightness.dark, //dark, light, values
