@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:meals_app/models/meal.dart';
 
-import 'package:meals_app/screens/create_note_page.dart';
 import 'package:meals_app/screens/meal_detail.dart';
 
 class MealNotesPage extends StatelessWidget {
@@ -19,14 +18,14 @@ class MealNotesPage extends StatelessWidget {
             Text(
               'Tüm Notlar',
             ),
-            IconButton(
+            /* IconButton(
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => CreateNotePage()));
                 },
-                icon: const Icon(Icons.add_box)),
+                icon: const Icon(Icons.add_box)), */
           ],
         ),
       ),
@@ -64,7 +63,10 @@ class MealNotesPage extends StatelessWidget {
                   final meal = mealSnapshot.data!;
                   return ListTile(
                     title: Text(content),
-                    subtitle: Text("Yemek Adı: ${meal.name}"),
+                    subtitle: Text(
+                      "Yemek Adı: ${meal.name}",
+                      style: TextStyle(color: Colors.teal),
+                    ),
                     onTap: () {
                       Navigator.push(
                           context,

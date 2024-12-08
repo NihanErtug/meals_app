@@ -1,17 +1,19 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateNotePage extends StatelessWidget {
+  const CreateNotePage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _notesController = TextEditingController();
+    final TextEditingController notesController = TextEditingController();
 
-    Future<void> _saveNote() async {
-      if (_notesController.text.isEmpty) return;
+    Future<void> saveNote() async {
+      if (notesController.text.isEmpty) return;
 
       try {
         await FirebaseFirestore.instance.collection('notes').add({
-          'content': _notesController.text,
+          'content': notesController.text,
           'createdAt': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         });
@@ -32,7 +34,7 @@ class CreateNotePage extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              controller: _notesController,
+              controller: notesController,
               decoration: const InputDecoration(
                 labelText: "Not İçeriği",
                 border: OutlineInputBorder(),
@@ -41,7 +43,7 @@ class CreateNotePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _saveNote,
+              onPressed: saveNote,
               child: const Text('Kaydet'),
             ),
           ],
@@ -50,3 +52,4 @@ class CreateNotePage extends StatelessWidget {
     );
   }
 }
+ */

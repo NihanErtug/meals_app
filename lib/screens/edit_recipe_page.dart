@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/screens/homepage.dart';
 
 class EditRecipePage extends StatefulWidget {
   final Meal meal;
+
   const EditRecipePage({super.key, required this.meal});
 
   @override
@@ -15,7 +17,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
   late TextEditingController _nameController;
   late TextEditingController _ingredientsController;
   late TextEditingController _recipeController;
-  late String _imageUrl;
+  late TextEditingController _imageUrlController;
 
   @override
   void initState() {
@@ -24,7 +26,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
     _ingredientsController =
         TextEditingController(text: widget.meal.ingredients.join(', '));
     _recipeController = TextEditingController(text: widget.meal.recipe);
-    _imageUrl = widget.meal.imageUrl!;
+    _imageUrlController = TextEditingController(text: widget.meal.imageUrl!);
   }
 
   Future<void> _updateMeal() async {
@@ -32,7 +34,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
       id: widget.meal.id,
       categoryId: widget.meal.categoryId,
       name: _nameController.text,
-      imageUrl: _imageUrl,
+      imageUrl: _imageUrlController.text,
       ingredients: _ingredientsController.text.split(', '),
       rating: widget.meal.rating,
       recipe: _recipeController.text,
@@ -45,9 +47,11 @@ class _EditRecipePageState extends State<EditRecipePage> {
           .doc(widget.meal.id)
           .update(updatedMeal.toFirestore());
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tarif güncellendi')),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tarif güncellendi')),
+        );
+      });
 
       Navigator.of(context).pop();
     } catch (e) {
@@ -55,6 +59,40 @@ class _EditRecipePageState extends State<EditRecipePage> {
         const SnackBar(content: Text('Hata: Tarif güncellenemedi')),
       );
     }
+  }
+
+  Future<void> _deleteRecipe(BuildContext context, String id) async {
+    try {
+      await FirebaseFirestore.instance.collection('meals').doc(id).delete();
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Tarif silindi")));
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Hata: Tarif silinemedi")));
+    }
+  }
+
+  Future<bool?> _showDeleteConfirmation(BuildContext context) {
+    return showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Tarifi Sil"),
+              content: Text("Tarifi silmek istediğinizden emin misiniz?"),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text("Hayır")),
+                ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text("Evet")),
+              ],
+            ));
   }
 
   @override
@@ -95,9 +133,31 @@ class _EditRecipePageState extends State<EditRecipePage> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _updateMeal,
-                child: const Text('Kaydet'),
+              TextField(
+                controller: _imageUrlController,
+                decoration: InputDecoration(labelText: 'Resim URL'),
+                onChanged: (value) {
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _updateMeal,
+                    child: const Text('Kaydet'),
+                  ),
+                  SizedBox(width: 20),
+                  ElevatedButton(
+                      onPressed: () async {
+                        bool? confirmDelete =
+                            await _showDeleteConfirmation(context);
+                        if (confirmDelete == true) {
+                          await _deleteRecipe(context, widget.meal.id);
+                        }
+                      },
+                      child: Text("Tarifi Sil")),
+                ],
               ),
             ],
           ),

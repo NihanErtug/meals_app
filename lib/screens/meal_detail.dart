@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/notes/notes_provider.dart';
 import 'package:meals_app/providers/favorites_notifier.dart';
-import 'package:meals_app/providers/notes_provider.dart';
 
 import 'package:meals_app/screens/edit_recipe_page.dart';
-import 'package:meals_app/screens/meal_notes_page.dart';
+import '../../notes/meal_notes_page.dart';
 
 class MealDetail extends ConsumerStatefulWidget {
   const MealDetail({super.key, required this.meal});
@@ -38,21 +39,25 @@ class _MealDetailState extends ConsumerState<MealDetail> {
 
   void _fetchNotes() {
     _notesProvider.fetchNotes(widget.meal.id).listen((notesList) {
-      setState(() {
-        _notes = notesList;
-      });
+      if (mounted) {
+        setState(() {
+          _notes = notesList;
+        });
+      }
     });
   }
 
   Future<void> _saveNote() async {
-    if (_note == null || _note!.isEmpty) return;
+    final noteText = _noteController.text.trim();
+    if (noteText.isEmpty) return;
+
+    if (_note == null || _note!.trim().isEmpty) return;
 
     try {
-      await _notesProvider.addNote(widget.meal.id, _note!);
+      await _notesProvider.addNote(widget.meal.id, _note!.trim());
 
-      _note = '';
       _noteController.clear();
-      _fetchNotes();
+      _note = null;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Notunuz kaydedildi.")),
@@ -77,9 +82,14 @@ class _MealDetailState extends ConsumerState<MealDetail> {
                     TextStyle(fontSize: 22, fontWeight: FontWeight.w500))),
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditRecipePage(meal: widget.meal)));
+              onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditRecipePage(
+                          meal: widget.meal,
+                        )));
+                setState(() {
+                  _fetchNotes();
+                });
               },
               icon: const Icon(Icons.edit)),
           IconButton(
@@ -161,12 +171,13 @@ class _MealDetailState extends ConsumerState<MealDetail> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Notlar: ",
+                      "Not Ekle:",
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: _noteController,
                       decoration: const InputDecoration(
                         hintText: "Notunuzu buraya girin",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300),
@@ -175,10 +186,8 @@ class _MealDetailState extends ConsumerState<MealDetail> {
                       onChanged: (value) {
                         setState(() {
                           _note = value;
-                          _noteController.text = value;
                         });
                       },
-                      controller: _noteController,
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -194,6 +203,11 @@ class _MealDetailState extends ConsumerState<MealDetail> {
                 ),
               ),
               const SizedBox(height: 20),
+              const Text(
+                "Notlar:",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 10),
               // Kaydedilen notlar listesi
               if (_notes.isNotEmpty)
                 Column(

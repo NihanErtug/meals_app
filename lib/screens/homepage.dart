@@ -1,9 +1,10 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:meals_app/notes/meal_notes_page.dart';
+
 import 'package:meals_app/screens/add_recipe_page.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/favorites.dart';
-import 'package:meals_app/screens/meal_notes_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: (bottomBarPages.length <= maxCount)
           ? AnimatedNotchBottomBar(
               notchBottomBarController: _controller,
-              color: Colors.grey.shade400,
+              color: Theme.of(context).colorScheme.onPrimary,
               showLabel: true,
               textOverflow: TextOverflow.visible,
               maxLine: 1,
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
               notchColor: const Color.fromARGB(192, 53, 49, 49),
               removeMargins: false,
               bottomBarWidth: 500,
-              showShadow: false,
+              showShadow: true,
               durationInMilliSeconds: 300,
               itemLabelStyle:
                   const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),

@@ -6,6 +6,8 @@ import 'package:meals_app/data/category_data.dart';
 import 'package:meals_app/models/category.dart';
 import 'package:meals_app/models/meal.dart';
 
+import 'package:meals_app/screens/homepage.dart';
+
 class AddRecipePage extends StatefulWidget {
   const AddRecipePage({super.key});
 
@@ -18,11 +20,18 @@ class _AddRecipePageState extends State<AddRecipePage> {
   final _nameController = TextEditingController();
   final _recipeController = TextEditingController();
   final _ingredientController = TextEditingController();
+  final _imageUrlController = TextEditingController();
+
+  @override
+  void dispose() {
+    _imageUrlController.dispose();
+    super.dispose();
+  }
 
   final List<String> _ingredients = [];
   double _rating = 0.0;
   Category? _selectedCategory;
-  String? _imageUrl = '';
+  //String? _imageUrl = '';
 
   void _addIngredient() {
     if (_ingredientController.text.isNotEmpty) {
@@ -39,7 +48,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
           id: '',
           categoryId: _selectedCategory!.id,
           name: _nameController.text,
-          imageUrl: '',
+          imageUrl: _imageUrlController.text,
           ingredients: _ingredients,
           rating: _rating,
           recipe: _recipeController.text);
@@ -53,6 +62,10 @@ class _AddRecipePageState extends State<AddRecipePage> {
       );
 
       Navigator.of(context).pop();
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     }
   }
 
@@ -99,9 +112,17 @@ class _AddRecipePageState extends State<AddRecipePage> {
                         }),
                     const SizedBox(height: 20),
                     TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: 'Resim URL'),
-                        onSaved: (value) => _imageUrl = value!),
+                      controller: _imageUrlController,
+                      decoration: const InputDecoration(
+                          labelText:
+                              'Resim URL (Resim eklemek istemiyorsanız boşluk bırakın.)'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Resim URL boş olamaz.";
+                        }
+                        return null;
+                      },
+                    ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
