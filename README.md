@@ -54,4 +54,3 @@ Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize ya
   - Yemek tarifinin detaylarını ve eklediğiniz notları görüntüleyebilirsiniz.
 
 
-
