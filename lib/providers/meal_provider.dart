@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:meals_app/models/meal.dart';
 
 class MealProvider {
@@ -6,7 +7,6 @@ class MealProvider {
       FirebaseFirestore.instance.collection('meals');
 
   // belirli bir kategoriye ait yemekleri getir
-
   Future<List<Meal>> fetchMealsByCategory(String categoryId,
       [String searchTerm = '']) async {
     try {

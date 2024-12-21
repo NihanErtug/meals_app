@@ -2,7 +2,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:meals_app/notes/meal_notes_page.dart';
 
-import 'package:meals_app/screens/add_recipe_page.dart';
+import 'package:meals_app/recipe/add_recipe_page.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/favorites.dart';
 

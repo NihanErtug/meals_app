@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/notes/notes_provider.dart';
 import 'package:meals_app/providers/favorites_notifier.dart';
+import 'package:meals_app/recipe/edit_recipe_page.dart';
 
-import 'package:meals_app/screens/edit_recipe_page.dart';
 import '../../notes/meal_notes_page.dart';
 
 class MealDetail extends ConsumerStatefulWidget {
@@ -85,7 +85,7 @@ class _MealDetailState extends ConsumerState<MealDetail> {
               onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EditRecipePage(
-                          meal: widget.meal,
+                          mealId: widget.meal.id,
                         )));
                 setState(() {
                   _fetchNotes();
