@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Meal {
-  final String id;
-  final String categoryId;
-  final String name;
+  String id;
+  String categoryId;
+  String name;
   String? imageUrl;
-  final List<String> ingredients;
+  List<String> ingredients;
   double? rating;
-  final String recipe;
+  String recipe;
   String? note;
 
   Meal({

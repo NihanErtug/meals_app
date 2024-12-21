@@ -46,10 +46,11 @@ class Favorites extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       entry.key,
-                      style: GoogleFonts.protestRevolution(
-                          textStyle: Theme.of(context).textTheme.titleLarge
-                          //?.copyWith(decoration: TextDecoration.underline)
-                          ),
+                      style: GoogleFonts.caveat(
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(decoration: TextDecoration.underline)),
                     ),
                   ),
                   ...entry.value.map((meal) {
@@ -62,23 +63,32 @@ class Favorites extends ConsumerWidget {
                       },
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: meal.imageUrl!.isNotEmpty
-                              ? NetworkImage(meal.imageUrl!)
-                              : AssetImage("assets/default_image.jpg")
-                                  as ImageProvider,
                           radius: 20,
+                          child: ClipOval(
+                            child: Image.network(
+                              meal.imageUrl!.isNotEmpty ? meal.imageUrl! : '',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/default_image.jpg',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
                         ),
                         title: Text(
                           meal.name,
                           style: const TextStyle(
                               fontSize: 18,
-                              color: Colors.black87,
+                              //color: Colors.black87,
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w300),
                         ),
                       ),
                     );
                   }).toList(),
+                  SizedBox(height: 10),
                 ]),
               );
             }).toList(),
