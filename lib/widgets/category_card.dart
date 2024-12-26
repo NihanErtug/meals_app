@@ -36,8 +36,7 @@ class CategoryCard extends StatelessWidget {
         child: Center(
           child: Text(
             category.name,
-            style: GoogleFonts.protestRevolution(
-                textStyle: TextStyle(fontSize: 17)),
+            style: GoogleFonts.caveat(textStyle: TextStyle(fontSize: 22)),
           ),
         ),
       ),
