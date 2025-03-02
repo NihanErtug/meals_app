@@ -3,7 +3,7 @@
   <img src="https://github.com/user-attachments/assets/8c9b2290-9702-4c79-9bf2-50231ad1d09d" alt="Uygulama İkonu" width="300" />
 </div>
 
-<br>
+
 ## 📱 Uygulama Hakkında
 Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize yardımcı olur. Aşağıda uygulamanın özellikleri ve ekran görüntülerini bulabilirsiniz.
 
@@ -63,4 +63,5 @@ Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize ya
 
   - Yemek tarifinin detaylarını ve eklediğiniz notları görüntüleyebilirsiniz.
 
-
+## 📝 Lisans
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylı bilgi için [LICENSE](LICENSE) dosyasına bakınız.
