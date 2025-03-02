@@ -1,4 +1,3 @@
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -9,17 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/providers/theme_notifier.dart';
 
 import 'package:meals_app/screens/splash_screen.dart';
-
-/* final theme = ThemeData(
-    appBarTheme: AppBarTheme(
-        titleTextStyle: GoogleFonts.dancingScript(
-            textStyle:
-                ThemeData().textTheme.headlineLarge?.copyWith(fontSize: 33))),
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.dark, //dark, light, values
-      seedColor: Colors.teal,
-    )); */
 
 final lightTheme = ThemeData(
   appBarTheme: AppBarTheme(

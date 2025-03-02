@@ -1,6 +1,6 @@
 # Meals App
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/95504304-bd61-4c46-94db-42e1f370a811" alt="Uygulama İkonu" width="300" />
+  <img src="https://github.com/user-attachments/assets/8c9b2290-9702-4c79-9bf2-50231ad1d09d" alt="Uygulama İkonu" width="300" />
 </div>
 
 <br>
@@ -13,6 +13,17 @@ Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize ya
 - Favorilere yemek ekleme ve kaldırma
 - Kategorilere göre yemek arama
 - Kişisel notlar ekleme
+
+## 🛠️ Teknik Özellikler
+
+- Flutter framework kullanılarak geliştirildi
+- Riverpod state management
+- Firebase entegrasyonu:
+  - Firebase Authentication (kullanıcı yönetimi)
+  - Cloud Firestore (yemek tarifleri ve kullanıcı verilerinin depolanması)
+  - Firebase Storage (yemek fotoğraflarının depolanması)
+- Responsive tasarım
+- Cross-platform uyumluluk (iOS ve Android)
 
 ## Ekran Görüntüleri
 
