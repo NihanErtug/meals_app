@@ -4,17 +4,27 @@
 </div>
 
 <br>
+## 📱 Uygulama Hakkında
 Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize yardımcı olur. Aşağıda uygulamanın özellikleri ve ekran görüntülerini bulabilirsiniz.
 
  
-## Özellikler
+## ✨ Özellikler
 
 - Yemek tariflerini görüntüleme, yeni tarifler ekleme ve düzenleme
 - Favorilere yemek ekleme ve kaldırma
 - Kategorilere göre yemek arama
 - Kişisel notlar ekleme
+- Kolay kullanılabilir arayüz
+- Karanlık/Aydınlık tema desteği
 
-## Ekran Görüntüleri
+## 🛠️ Teknik Özellikler
+
+- Flutter framework kullanılarak geliştirildi
+- Riverpod state management
+- Responsive tasarım
+- Firebase entegrasyonu
+
+## 📸 Ekran Görüntüleri
 
   Ana Sayfa        |   Ana Sayfa       |  Favoriler Sayfası    |   Favoriler Sayfası
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
