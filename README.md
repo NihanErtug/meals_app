@@ -65,3 +65,8 @@ Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize ya
 
 ## 📝 Lisans
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylı bilgi için [LICENSE](LICENSE) dosyasına bakınız.
+
+## ✍️ Geliştirici
+
+**Nihan Ertuğ**  
+GitHub: [github.com/NihanErtug](https://github.com/NihanErtug)  
