@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/notes/notes_provider.dart';
@@ -18,17 +18,19 @@ class MealDetail extends ConsumerStatefulWidget {
 }
 
 class _MealDetailState extends ConsumerState<MealDetail> {
-  String? _note;
   List<String> _notes = [];
   late TextEditingController _noteController;
   late final NotesProvider _notesProvider;
 
+  late Meal _meal;
+
   @override
   void initState() {
     super.initState();
-    _noteController = TextEditingController(text: _note);
+    _meal = widget.meal;
+    _noteController = TextEditingController();
     _notesProvider = NotesProvider();
-    _fetchNotes();
+    _loadNotesOnce();
   }
 
   @override
@@ -37,27 +39,52 @@ class _MealDetailState extends ConsumerState<MealDetail> {
     super.dispose();
   }
 
-  void _fetchNotes() {
-    _notesProvider.fetchNotes(widget.meal.id).listen((notesList) {
-      if (mounted) {
-        setState(() {
-          _notes = notesList;
-        });
-      }
-    });
+  Future<void> _loadNotesOnce() async {
+    try {
+      final notesList = await _notesProvider.fetchNotes(_meal.id).first;
+      if (!mounted) return;
+      setState(() {
+        _notes = notesList;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Notlar yüklenemedi.")));
+    }
+  }
+
+  Future<void> _refreshMeal() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('meals')
+          .doc(_meal.id)
+          .get();
+
+      if (!mounted || !doc.exists) return;
+
+      setState(() {
+        _meal = Meal.fromFirestore(doc);
+      });
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Yemek bilgisi yenilenemedi.")));
+    }
   }
 
   Future<void> _saveNote() async {
     final noteText = _noteController.text.trim();
     if (noteText.isEmpty) return;
 
-    if (_note == null || _note!.trim().isEmpty) return;
-
     try {
-      await _notesProvider.addNote(widget.meal.id, _note!.trim());
+      await _notesProvider.addNote(_meal.id, noteText);
+
+      if (!mounted) return;
+      setState(() {
+        _notes.insert(0, noteText);
+      });
 
       _noteController.clear();
-      _note = null;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Notunuz kaydedildi.")),
@@ -72,163 +99,164 @@ class _MealDetailState extends ConsumerState<MealDetail> {
   @override
   Widget build(BuildContext context) {
     final favorites = ref.watch(favoriteMealsProvider);
-    final isFavorite = favorites.any((meal) => meal.id == widget.meal.id);
+    final isFavorite = favorites.any((meal) => meal.id == _meal.id);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.meal.name,
-            style: GoogleFonts.raleway(
-                textStyle:
-                    TextStyle(fontSize: 22, fontWeight: FontWeight.w500))),
+        title: Text(_meal.name,
+            style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Raleway')),
         actions: [
+          if (_meal.rating != 0.0)
+            Text(
+              "${_meal.rating}",
+              style: TextStyle(fontSize: 16),
+            ),
           IconButton(
               onPressed: () async {
-                await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditRecipePage(
-                          mealId: widget.meal.id,
-                        )));
-                setState(() {
-                  _fetchNotes();
-                });
+                final updated = await Navigator.of(context).push<bool>(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditRecipePage(mealId: _meal.id)));
+
+                if (updated == true) {
+                  await _refreshMeal();
+                }
               },
               icon: const Icon(Icons.edit)),
           IconButton(
             onPressed: () {
-              ref
-                  .read(favoriteMealsProvider.notifier)
-                  .toggleFavorite(widget.meal);
+              ref.read(favoriteMealsProvider.notifier).toggleFavorite(_meal);
             },
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
               color: isFavorite ? Colors.red : Colors.grey,
             ),
           ),
-          /* IconButton(
-            onPressed: () {
-              // paylaşım işlemi buraya gelecek
-            },
-            icon: const Icon(Icons.share),
-          ), */
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(26.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  widget.meal.imageUrl!.isNotEmpty
-                      ? widget.meal.imageUrl!
-                      : 'assets/default_image.jpg',
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset('assets/default_image.jpg');
-                  },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    _meal.imageUrl!.isNotEmpty
+                        ? _meal.imageUrl!
+                        : 'assets/default_image.jpg',
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset('assets/default_image.jpg');
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: Text(
-                  " Malzemeler ",
-                  style: GoogleFonts.raleway(
-                      textStyle: TextStyle(
-                          fontSize: 21, decoration: TextDecoration.underline)),
+                SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    " Malzemeler ",
+                    style: TextStyle(
+                        fontSize: 21,
+                        fontFamily: 'Raleway',
+                        decoration: TextDecoration.underline),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 9),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.meal.ingredients.map((e) {
-                  return Text(
-                    " -  $e",
-                    style: const TextStyle(fontSize: 17),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-              Divider(),
-              Center(
-                child: Text(" Yapılışı ",
-                    style: GoogleFonts.raleway(
-                        textStyle: TextStyle(
-                            fontSize: 21,
-                            decoration: TextDecoration.underline))),
-              ),
-              const SizedBox(height: 9),
-              Text(
-                widget.meal.recipe,
-                style: const TextStyle(fontSize: 17),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(48, 117, 117, 117),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Not Ekle:",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _noteController,
-                      decoration: const InputDecoration(
-                        hintText: "Notunuzu buraya girin",
-                        hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _note = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _saveNote,
-                          child: const Text("Kaydet"),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Notlar:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 10),
-              // Kaydedilen notlar listesi
-              if (_notes.isNotEmpty)
+                const SizedBox(height: 9),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _notes.map((content) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const MealNotesPage(),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Text("- $content"),
-                      ),
+                  children: _meal.ingredients.map((e) {
+                    return Text(
+                      " -  $e",
+                      style: const TextStyle(fontSize: 17),
                     );
                   }).toList(),
                 ),
-            ],
+                const SizedBox(height: 20),
+                Divider(),
+                Center(
+                  child: Text(" Yapılışı ",
+                      style: TextStyle(
+                          fontSize: 21,
+                          fontFamily: 'Raleway',
+                          decoration: TextDecoration.underline)),
+                ),
+                const SizedBox(height: 9),
+                Text(
+                  _meal.recipe,
+                  style: const TextStyle(fontSize: 17),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(48, 117, 117, 117),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Not Ekle:",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _noteController,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: const InputDecoration(
+                          hintText: "Notunuzu buraya girin",
+                          hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _saveNote,
+                            child: const Text("Kaydet"),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Notlar:",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 10),
+                if (_notes.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _notes.map((content) {
+                      return GestureDetector(
+                        onTap: () async {
+                          final changed =
+                              await Navigator.of(context).push<bool>(
+                            MaterialPageRoute(
+                              builder: (context) => const MealNotesPage(),
+                            ),
+                          );
+                          if (changed == true) {
+                            await _loadNotesOnce();
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Text("- $content"),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

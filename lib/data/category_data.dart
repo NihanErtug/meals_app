@@ -7,5 +7,7 @@ const categories = [
   Category(id: "3", name: "Mezeler", color: Colors.blue),
   Category(id: "4", name: "Tuzlular", color: Colors.red),
   Category(id: "5", name: "Tatlılar", color: Colors.green),
-  Category(id: "6", name: "Diğerleri", color: Colors.blueGrey),
+  Category(id: "6", name: "İçecekler", color: Colors.blueGrey),
+  Category(id: "7", name: "Glütensiz", color: Colors.teal),
+  Category(id: "8", name: "Diğer", color: Colors.brown),
 ];

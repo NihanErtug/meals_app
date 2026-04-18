@@ -5,106 +5,111 @@ import 'package:meals_app/models/meal.dart';
 
 import 'package:meals_app/screens/meal_detail.dart';
 
-class MealNotesPage extends StatelessWidget {
+class MealNotesPage extends StatefulWidget {
   const MealNotesPage({super.key});
 
   @override
+  State<MealNotesPage> createState() => _MealNotesPageState();
+}
+
+class _MealNotesPageState extends State<MealNotesPage> {
+  bool _hasChanges = false;
+
+  Future<bool> _onWillPop() async {
+    Navigator.pop(context, _hasChanges);
+    return false;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Tüm Notlar',
-            ),
-            /* IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateNotePage()));
-                },
-                icon: const Icon(Icons.add_box)), */
-          ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () => Navigator.pop(context, _hasChanges),
+              icon: Icon(Icons.arrow_back)),
+          title: Text(
+            'Tüm Notlar',
+          ),
         ),
-      ),
-      body: StreamBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
-        stream: FirebaseFirestore.instance
-            .collection('notes')
-            .orderBy('createdAt', descending: true)
-            .snapshots()
-            .map((snapshot) => snapshot.docs),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          final notes = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: notes.length,
-            itemBuilder: (context, index) {
-              final noteData = notes[index].data();
-              final noteId = notes[index].id;
-              final mealId = noteData['mealId'] as String;
-              final content = noteData['content'] as String;
-
-              return FutureBuilder<Meal?>(
-                future: _fetchMeal(mealId),
-                builder: (context, mealSnapshot) {
-                  if (!mealSnapshot.hasData) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  final meal = mealSnapshot.data!;
-                  return ListTile(
-                    title: Text(content),
-                    subtitle: Text(
-                      "Yemek Adı: ${meal.name}",
-                      style: TextStyle(color: Colors.teal),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MealDetail(meal: meal)));
-                    },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () async {
-                            final newContent =
-                                await _editNoteDialog(context, content);
-
-                            if (newContent != null && newContent.isNotEmpty) {
-                              await _updateNote(context, noteId, newContent);
-                            }
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            bool? confirmDelete =
-                                await _showDeleteConfirmationDialog(context);
-                            if (confirmDelete == true) {
-                              await _deleteNote(context, noteId);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
+        body: StreamBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+          stream: FirebaseFirestore.instance
+              .collection('notes')
+              .orderBy('createdAt', descending: true)
+              .snapshots()
+              .map((snapshot) => snapshot.docs),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          );
-        },
+            }
+
+            final notes = snapshot.data!;
+
+            return ListView.builder(
+              itemCount: notes.length,
+              itemBuilder: (context, index) {
+                final noteData = notes[index].data();
+                final noteId = notes[index].id;
+                final mealId = noteData['mealId'] as String;
+                final content = noteData['content'] as String;
+
+                return FutureBuilder<Meal?>(
+                  future: _fetchMeal(mealId),
+                  builder: (context, mealSnapshot) {
+                    if (!mealSnapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    final meal = mealSnapshot.data!;
+                    return ListTile(
+                      title: Text(content),
+                      subtitle: Text(
+                        "Yemek Adı: ${meal.name}",
+                        style: TextStyle(color: Colors.teal),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MealDetail(meal: meal)));
+                      },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () async {
+                              final newContent =
+                                  await _editNoteDialog(context, content);
+
+                              if (newContent != null && newContent.isNotEmpty) {
+                                await _updateNote(context, noteId, newContent);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              bool? confirmDelete =
+                                  await _showDeleteConfirmationDialog(context);
+                              if (confirmDelete == true) {
+                                await _deleteNote(context, noteId);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -132,6 +137,7 @@ class MealNotesPage extends StatelessWidget {
         'content': newContent,
         'updatedAt': Timestamp.now(),
       });
+      _hasChanges = true;
     } catch (e) {
       _showErrorSnackBar(context, "Not güncellenemedi");
     }
@@ -158,6 +164,7 @@ class MealNotesPage extends StatelessWidget {
   Future<void> _deleteNote(BuildContext context, String noteId) async {
     try {
       await FirebaseFirestore.instance.collection('notes').doc(noteId).delete();
+      _hasChanges = true;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Hata: Not silinemedi")),

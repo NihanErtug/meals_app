@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:meals_app/models/category.dart';
 import 'package:meals_app/models/meal.dart';
@@ -77,11 +76,10 @@ class _MealsState extends State<Meals> {
             ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(left: 60, bottom: 16),
-              title: Text(
-                "${widget.category.name} ",
-                style: GoogleFonts.protestRevolution(
-                    textStyle: TextStyle(color: widget.category.color)),
-              ),
+              title: Text("${widget.category.name} ",
+                  style: TextStyle(
+                      fontFamily: 'ProtestRevolution',
+                      color: widget.category.color)),
             ),
           ),
           SliverToBoxAdapter(
@@ -111,12 +109,15 @@ class _MealsState extends State<Meals> {
                             child: Text("Bu kategoriye ait yemek bulunamadı."),
                           ),
                         )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) => MealCard(
-                              meal: mealList[index],
+                      : SliverSafeArea(
+                          top: false,
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) => MealCard(
+                                meal: mealList[index],
+                              ),
+                              childCount: mealList.length,
                             ),
-                            childCount: mealList.length,
                           ),
                         ),
         ],

@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:meals_app/models/category.dart';
 
 import 'package:meals_app/models/meal.dart';
-import 'package:meals_app/providers/meal_provider.dart';
+
 import 'package:meals_app/screens/homepage.dart';
-import 'package:meals_app/screens/meals.dart';
 
 class EditRecipePage extends StatefulWidget {
   final String mealId;
@@ -23,8 +21,6 @@ class _EditRecipePageState extends State<EditRecipePage> {
   late TextEditingController _ratingController;
   late TextEditingController _imageUrlController;
 
-  //late Meal _meal;
-
   @override
   void initState() {
     super.initState();
@@ -33,33 +29,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
     _recipeController = TextEditingController();
     _ratingController = TextEditingController();
     _imageUrlController = TextEditingController();
-
-    // dinleyiciyi başlatma
-    //_fetchMealData();
   }
-
-/*
-  // veriyi çekme
-  void _fetchMealData() {
-    FirebaseFirestore.instance
-        .collection('meals')
-        .doc(widget.mealId)
-        .snapshots() // veritabanındaki değişiklikleri anında dinlemek için
-        .listen((mealSnapshot) {
-      if (mealSnapshot.exists) {
-        _meal = Meal.fromFirestore(mealSnapshot);
-
-        // değişiklikler TextField lara yansıtılıyor
-        _nameController.text = _meal.name;
-        _ingredientsController.text = _meal.ingredients.join(', ');
-        _recipeController.text = _meal.recipe;
-        _ratingController.text = _meal.rating?.toString() ?? '';
-        _imageUrlController.text = _meal.imageUrl ?? '';
-        setState(() {}); // ekran güncelleniyor
-      }
-    });
-  }
-*/
 
   Future<void> _saveChanges() async {
     try {
@@ -80,10 +50,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Tarif güncellendi')));
 
-      Navigator.pop(context);
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.pop(context, true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Hata: Tarif güncellenemedi')));
@@ -150,60 +117,62 @@ class _EditRecipePageState extends State<EditRecipePage> {
           _ratingController.text = meal.rating?.toString() ?? '';
           _imageUrlController.text = meal.imageUrl ?? '';
 
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Yemek Adı'),
-                  ),
-                  TextField(
-                    controller: _ingredientsController,
-                    decoration: const InputDecoration(
-                        labelText: 'Malzemeler (virgülle ayırın)'),
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                  ),
-                  TextField(
-                    controller: _recipeController,
-                    decoration: const InputDecoration(labelText: 'Tarif'),
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _imageUrlController,
-                    decoration: InputDecoration(labelText: 'Resim URL'),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _ratingController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: 'Puan'),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: _saveChanges,
-                        child: const Text('Kaydet'),
-                      ),
-                      SizedBox(width: 20),
-                      ElevatedButton(
-                          onPressed: () async {
-                            bool? confirmDelete =
-                                await _showDeleteConfirmation(context);
-                            if (confirmDelete == true) {
-                              await _deleteRecipe(context, widget.mealId);
-                            }
-                          },
-                          child: Text("Tarifi Sil")),
-                    ],
-                  ),
-                ],
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: 'Yemek Adı'),
+                    ),
+                    TextField(
+                      controller: _ingredientsController,
+                      decoration: const InputDecoration(
+                          labelText: 'Malzemeler (virgülle ayırın)'),
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                    ),
+                    TextField(
+                      controller: _recipeController,
+                      decoration: const InputDecoration(labelText: 'Tarif'),
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _imageUrlController,
+                      decoration: InputDecoration(labelText: 'Resim URL'),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _ratingController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'Puan'),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: _saveChanges,
+                          child: const Text('Kaydet'),
+                        ),
+                        SizedBox(width: 20),
+                        ElevatedButton(
+                            onPressed: () async {
+                              bool? confirmDelete =
+                                  await _showDeleteConfirmation(context);
+                              if (confirmDelete == true) {
+                                await _deleteRecipe(context, widget.mealId);
+                              }
+                            },
+                            child: Text("Tarifi Sil")),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );

@@ -63,45 +63,47 @@ class _HomePageState extends State<HomePage> {
       ),
       extendBody: true,
       bottomNavigationBar: (bottomBarPages.length <= maxCount)
-          ? AnimatedNotchBottomBar(
-              notchBottomBarController: _controller,
-              color: Theme.of(context).colorScheme.onPrimary,
-              showLabel: true,
-              textOverflow: TextOverflow.visible,
-              maxLine: 1,
-              shadowElevation: 5,
-              kBottomRadius: 28.0,
-              notchColor: const Color.fromARGB(192, 53, 49, 49),
-              removeMargins: false,
-              bottomBarWidth: 500,
-              showShadow: true,
-              durationInMilliSeconds: 300,
-              itemLabelStyle:
-                  const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
-              elevation: 1,
-              bottomBarItems: [
-                buildBottomBarItem(
-                    activeIcon: Icons.home_filled,
-                    inactiveIcon: Icons.home_filled,
-                    label: "Kategoriler"),
-                buildBottomBarItem(
-                    activeIcon: Icons.favorite,
-                    inactiveIcon: Icons.favorite,
-                    label: "Favoriler"),
-                buildBottomBarItem(
-                    activeIcon: Icons.note,
-                    inactiveIcon: Icons.note,
-                    label: "Notlar"),
-                buildBottomBarItem(
-                    activeIcon: Icons.add_comment_rounded,
-                    inactiveIcon: Icons.add_comment_rounded,
-                    label: "Tarif Ekle"),
-              ],
-              onTap: (index) {
-                //log('seçili dizin $index');
-                _pageController.jumpToPage(index);
-              },
-              kIconSize: 24.0,
+          ? SafeArea(
+              child: AnimatedNotchBottomBar(
+                notchBottomBarController: _controller,
+                color: Theme.of(context).colorScheme.onPrimary,
+                showLabel: true,
+                textOverflow: TextOverflow.visible,
+                maxLine: 1,
+                shadowElevation: 5,
+                kBottomRadius: 28.0,
+                notchColor: const Color.fromARGB(192, 53, 49, 49),
+                removeMargins: false,
+                bottomBarWidth: 500,
+                showShadow: true,
+                durationInMilliSeconds: 300,
+                itemLabelStyle:
+                    const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+                elevation: 1,
+                bottomBarItems: [
+                  buildBottomBarItem(
+                      activeIcon: Icons.home_filled,
+                      inactiveIcon: Icons.home_filled,
+                      label: "Kategoriler"),
+                  buildBottomBarItem(
+                      activeIcon: Icons.favorite,
+                      inactiveIcon: Icons.favorite,
+                      label: "Favoriler"),
+                  buildBottomBarItem(
+                      activeIcon: Icons.note,
+                      inactiveIcon: Icons.note,
+                      label: "Notlar"),
+                  buildBottomBarItem(
+                      activeIcon: Icons.add_comment_rounded,
+                      inactiveIcon: Icons.add_comment_rounded,
+                      label: "Tarif Ekle"),
+                ],
+                onTap: (index) {
+                  //log('seçili dizin $index');
+                  _pageController.jumpToPage(index);
+                },
+                kIconSize: 24.0,
+              ),
             )
           : null,
     );

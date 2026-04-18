@@ -13,12 +13,10 @@ dependencies:
   riverpod: ^2.5.1
   transparent_image: ^2.0.1
 
-
   firebase_core: ^3.3.0
   cloud_firestore: ^5.2.1
   animated_notch_bottom_bar: ^1.0.3
   icons_launcher: ^3.0.0
-  google_fonts: ^6.2.1
   flutter_native_splash: ^2.4.3
   shared_preferences: ^2.3.3
   
@@ -52,6 +50,26 @@ flutter:
     - assets/default_image.jpg
     - assets/splash_screen.png
     - assets/animation/splash_screen.gif
+
+  fonts:
+    - family: ProtestRevolution
+      fonts:
+        - asset: assets/fonts/ProtestRevolution-Regular.ttf 
+
+    - family: DancingScript
+      fonts:
+        - asset: assets/fonts/DancingScript-VariableFont_wght.ttf 
+
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway-VariableFont_wght.ttf 
+
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/Caveat-VariableFont_wght.ttf         
+
+
+          
    
 
 

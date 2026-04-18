@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/providers/favorites_notifier.dart';
@@ -46,11 +45,12 @@ class Favorites extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       entry.key,
-                      style: GoogleFonts.caveat(
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(decoration: TextDecoration.underline)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(
+                              decoration: TextDecoration.underline,
+                              fontFamily: 'Caveat'),
                     ),
                   ),
                   ...entry.value.map((meal) {

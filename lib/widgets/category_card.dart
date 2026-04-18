@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:meals_app/models/category.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -36,7 +36,7 @@ class CategoryCard extends StatelessWidget {
         child: Center(
           child: Text(
             category.name,
-            style: GoogleFonts.caveat(textStyle: TextStyle(fontSize: 22)),
+            style: TextStyle(fontSize: 22, fontFamily: 'Caveat'),
           ),
         ),
       ),
