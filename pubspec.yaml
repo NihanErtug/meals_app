@@ -21,20 +21,12 @@ dependencies:
   shared_preferences: ^2.3.3
   
 
-
-
 icons_launcher:
   image_path: "assets/icon/launcher_icon.png"
   platforms:
     android:
       enable: true
        
-flutter_native_splash:
-   
-  background_image: assets/splash_screen.png
-  android: true
-  fullscreen: true
-  
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +40,7 @@ flutter:
   
   assets:     
     - assets/default_image.jpg
-    - assets/splash_screen.png
+    - assets/launcher_image.png
     - assets/animation/splash_screen.gif
 
   fonts:

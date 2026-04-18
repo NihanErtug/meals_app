@@ -1,20 +1,30 @@
 # Meals App
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/95504304-bd61-4c46-94db-42e1f370a811" alt="Uygulama İkonu" width="300" />
+  <img src="https://github.com/user-attachments/assets/8c9b2290-9702-4c79-9bf2-50231ad1d09d" alt="Uygulama İkonu" width="300" />
 </div>
 
-<br>
+
+## 📱 Uygulama Hakkında
 Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize yardımcı olur. Aşağıda uygulamanın özellikleri ve ekran görüntülerini bulabilirsiniz.
 
  
-## Özellikler
+## ✨ Özellikler
 
 - Yemek tariflerini görüntüleme, yeni tarifler ekleme ve düzenleme
 - Favorilere yemek ekleme ve kaldırma
 - Kategorilere göre yemek arama
 - Kişisel notlar ekleme
+- Kolay kullanılabilir arayüz
+- Karanlık/Aydınlık tema desteği
 
-## Ekran Görüntüleri
+## 🛠️ Teknik Özellikler
+
+- Flutter framework kullanılarak geliştirildi
+- Riverpod state management
+- Responsive tasarım
+- Firebase entegrasyonu
+
+## 📸 Ekran Görüntüleri
 
   Ana Sayfa        |   Ana Sayfa       |  Favoriler Sayfası    |   Favoriler Sayfası
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
@@ -53,4 +63,10 @@ Bu uygulama yemek tariflerinizi yönetmenize ve favorilerinizi düzenlemenize ya
 
   - Yemek tarifinin detaylarını ve eklediğiniz notları görüntüleyebilirsiniz.
 
+## 📝 Lisans
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylı bilgi için [LICENSE](LICENSE) dosyasına bakınız.
 
+## ✍️ Geliştirici
+
+**Nihan Ertuğ**  
+GitHub: [github.com/NihanErtug](https://github.com/NihanErtug)  
